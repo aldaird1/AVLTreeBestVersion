@@ -1,8 +1,10 @@
 #ifndef AVLTREE_H
 #define AVLTREE_H
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#define MAX(a,b) ((a>b)?a:b)
 
 typedef struct AVLNode {
     int m_height;
@@ -17,6 +19,10 @@ typedef struct AVLNode {
 AVLNode* newNode (int); 
 int nodeHeight (AVLNode*);
 
+
+AVLNode* insertRecursive (AVLNode*, int);//Las alturas de los subarboles a los que no se accede no se modifican
+
+void insert (AVLNode**, int);
 
 //======================== DEFINICONES DE LAS FUNCIONES ===================================//
 int nodeHeight (AVLNode* node) {
@@ -34,5 +40,53 @@ AVLNode* newNode (int _data) {
 
     return nuevoNodo;
 }
+
+AVLNode* insertRecursive (AVLNode* node, int _data) {
+    assert (node);
+    if (_data > node->m_data) {
+        if (node->m_right == NULL) {
+            node->m_right = newNode (_data);
+            node->m_right->m_parent = node;
+            
+            node->m_height = 1 + MAX(nodeHeight(node->m_left), nodeHeight(node->m_right));
+            return node; //Nunca hacen falta las rotaciones en este caso 
+        } else {
+            node->m_right = insertRecursive (node->m_right, _data);
+
+            node->m_height = 1 + MAX(nodeHeight(node->m_left), nodeHeight(node->m_right));
+            
+            //Rotaciones
+            return node;//Debe retornar el nuevo root
+        }
+
+    } else if (_data < node->m_data) {
+        if (node->m_left == NULL) {
+            node->m_left = newNode (_data);
+            node->m_left->m_parent = node;
+            
+            node->m_height = 1 + MAX(nodeHeight(node->m_left), nodeHeight(node->m_right));
+            return node; //Nunca hacen falta las rotaciones en este caso 
+        } else {
+            node->m_left = insertRecursive (node->m_left, _data);
+
+            node->m_height = 1 + MAX(nodeHeight(node->m_left), nodeHeight(node->m_right));
+            
+            //Rotaciones
+            return node;//Debe retornar el nuevo root
+        }
+    } else return node;
+}
+//
+
+
+
+//
+void insert (AVLNode** root, int _data) {
+    if (*root == NULL)
+        *root = newNode (_data);
+    else *root = insertRecursive (*root, _data);
+}
+
+
 
 #endif
