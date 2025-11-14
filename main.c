@@ -13,7 +13,14 @@ int main () {
     insert (&root, 16);
     insert (&root, 25);
 
-    printf ("Valor de la raiz: %d\n", root->m_data);
 
+    insert (&root, 4);
+    insert (&root, 3);
+    insert (&root, 2);
+    insert (&root, 1);
+    printf ("Valor de la raiz: %d\n", root->m_data);
+    printf ("El arbol esta quedando asi:\n");
+
+    printTreeRecursive (root, 1);
     return 0; 
 }
