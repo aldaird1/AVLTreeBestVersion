@@ -21,14 +21,31 @@ int nodeHeight (AVLNode*);
 
 
 AVLNode* insertRecursive (AVLNode*, int);//Las alturas de los subarboles a los que no se accede no se modifican
+void printTreeRecursive (AVLNode*, int);
 
 void insert (AVLNode**, int);
-
+void printTree (AVLNode*);
 //======================== DEFINICONES DE LAS FUNCIONES ===================================//
+void printTree (AVLNode* node) {printTreeRecursive (node, 1);}
+
 int nodeHeight (AVLNode* node) {
     if (!node) return -1;
     else return node->m_height;
 }
+
+void printTreeRecursive (AVLNode* node, int sub) {
+    if (!node) return;
+    printTreeRecursive (node->m_right, sub + 1);
+    
+    for (int i = 1; i < sub; i++) {
+        printf ("      ");
+    }
+    printf ("~~~~> %d\n", node->m_data);
+
+    printTreeRecursive (node->m_left, sub + 1);
+    return;
+}
+
 
 AVLNode* newNode (int _data) {
     AVLNode* nuevoNodo = malloc (sizeof (AVLNode));

@@ -16,8 +16,15 @@ int main () {
     insert (&root, 4);
     insert (&root, 3);
     insert (&root, 2);
+    insert (&root, 10);
 
     printf ("Valor de la raiz: %d\n", root->m_data);
+    printTree (root);
 
+    for (int i= 0; i < 5; i++) {
+        insert (&root, i -3);
+	printf ("Aca esta el tree:\n");
+	    printTree (root);	
+    }
     return 0; 
 }
