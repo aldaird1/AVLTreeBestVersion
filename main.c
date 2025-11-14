@@ -12,6 +12,10 @@ int main () {
     insert (&root, 13);
     insert (&root, 16);
     insert (&root, 25);
+    insert (&root, 5);
+    insert (&root, 4);
+    insert (&root, 3);
+    insert (&root, 2);
 
     printf ("Valor de la raiz: %d\n", root->m_data);
 
