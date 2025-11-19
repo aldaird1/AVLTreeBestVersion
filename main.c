@@ -23,14 +23,9 @@ int main () {
 
     for (int i= 0; i < 5; i++) {
         insert (&root, i -3);
-	printf ("Aca esta el tree:\n");
+	printf ("\n\n\nAca esta el tree:\n");
+        printf ("Se esta insertando %d\n", i);	
 	    printTree (root);	
     }
-    printf ("Rotación a la izquierda del arbol del  izquierdo\n");
-    root->m_left = leftRotate (root->m_left);
-    printTree (root);
-    printf ("Rotación a la derecha del arbol del  izquierdo\n");
-    root->m_right = rightRotate (root->m_right);
-    printTree (root);
     return 0; 
 }
