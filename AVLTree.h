@@ -20,13 +20,15 @@ AVLNode* newNode (int);
 int nodeHeight (AVLNode*);
 void leftRotate (AVLNode*);
 void rightRotate (AVLNode*);
+void rebalancing (AVLNode*);
 
-AVLNode* insertRecursive (AVLNode*, int);//Las alturas de los subarboles a los que no se accede no se modifican
+AVLNode* insertIt (AVLNode*, int);//Las alturas de los subarboles a los que no se accede no se modifican
 void printTreeRecursive (AVLNode*, int);
 
 void insert (AVLNode**, int);
 void printTree (AVLNode*);
 //======================== DEFINICONES DE LAS FUNCIONES ===================================//
+
 void rightRotate (AVLNode* node) {
     assert (node);
     assert (node->m_left); 
@@ -53,7 +55,7 @@ void leftRotate (AVLNode* node) {
     AVLNode* root = node->m_right;
     AVLNode* back = root->m_left;
 
-    root = node->m_parent;
+    root->m_parent = node->m_parent;
     if (root->m_parent) {
         if (node == node->m_parent->m_left) node->m_parent->m_left = root;
         else node->m_parent->m_right = root;
@@ -62,7 +64,7 @@ void leftRotate (AVLNode* node) {
     root->m_left = node;
     node->m_parent =root;
 
-    node->right = back;
+    node->m_right = back;
     if (back) back->m_parent = node;
 }
 
@@ -80,7 +82,7 @@ void printTreeRecursive (AVLNode* node, int sub) {
     for (int i = 1; i < sub; i++) {
         printf ("      ");
     }
-    printf ("~~~~> %d\n", node->m_data);
+    printf ("---- %d\n", node->m_data);
 
     printTreeRecursive (node->m_left, sub + 1);
     return;
@@ -98,40 +100,27 @@ AVLNode* newNode (int _data) {
     return nuevoNodo;
 }
 
-AVLNode* insertRecursive (AVLNode* node, int _data) {
-    assert (node);
-    if (_data > node->m_data) {
-        if (node->m_right == NULL) {
-            node->m_right = newNode (_data);
-            node->m_right->m_parent = node;
-            
-            node->m_height = 1 + MAX(nodeHeight(node->m_left), nodeHeight(node->m_right));
-            return node; //Nunca hacen falta las rotaciones en este caso 
-        } else {
-            node->m_right = insertRecursive (node->m_right, _data);
+AVLNode* insertIt (AVLNode* node, int _data) {
+   AVLNode* back = NULL;
+   
+   while (node) {//Recorre hasta el final del arbol
+       back = node;
+       if (_data > node->m_data) node = node->m_right;
+       else if (_data < node->m_data) node = node->m_left;
+       else return NULL;
+   }
 
-            node->m_height = 1 + MAX(nodeHeight(node->m_left), nodeHeight(node->m_right));
-            
-            //Rotaciones
-            return node;//Debe retornar el nuevo root
-        }
+   if (!back) return newNode (_data); //En el caso de que el arbol este vacio retorna le nuevo nodo
 
-    } else if (_data < node->m_data) {
-        if (node->m_left == NULL) {
-            node->m_left = newNode (_data);
-            node->m_left->m_parent = node;
-            
-            node->m_height = 1 + MAX(nodeHeight(node->m_left), nodeHeight(node->m_right));
-            return node; //Nunca hacen falta las rotaciones en este caso 
-        } else {
-            node->m_left = insertRecursive (node->m_left, _data);
-
-            node->m_height = 1 + MAX(nodeHeight(node->m_left), nodeHeight(node->m_right));
-            
-            //Rotaciones
-            return node;//Debe retornar el nuevo root
-        }
-    } else return node;
+   if (_data > back->m_data) { //El caso normal en el que se inserta el nodo en la posición que se desea y se retorna un puntero a ese nodo
+        back->m_right = newNode (_data);
+        back->m_right->m_parent = back;
+        return back->m_right;
+   } else if (_data < back->m_data) {
+        back->m_left = newNode (_data);
+        back->m_left->m_parent = back;
+        return back->m_left;
+   } else return NULL;
 }
 //
 
@@ -139,10 +128,15 @@ AVLNode* insertRecursive (AVLNode* node, int _data) {
 
 //
 void insert (AVLNode** root, int _data) {
-    if (*root == NULL)
-        *root = newNode (_data);
-    else *root = insertRecursive (*root, _data);
+    if (!(*root)) {
+        *root = insertIt (*root,_data);
+        return;
+    }
+
+    AVLNode* last = insertIt (*root, _data);
+    //rebalancing (last); 
 }
+
 
 
 
