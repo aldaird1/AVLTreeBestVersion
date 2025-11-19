@@ -17,9 +17,10 @@ typedef struct AVLNode {
 
 //======================== DECLARACIONES DE LAS FUNCIONES =================================//
 AVLNode* newNode (int); 
+int bf (AVLNode* );
 int nodeHeight (AVLNode*);
-void leftRotate (AVLNode*);
-void rightRotate (AVLNode*);
+AVLNode* leftRotate (AVLNode*);
+AVLNode* rightRotate (AVLNode*);
 void rebalancing (AVLNode*);
 
 AVLNode* insertIt (AVLNode*, int);//Las alturas de los subarboles a los que no se accede no se modifican
@@ -28,8 +29,11 @@ void printTreeRecursive (AVLNode*, int);
 void insert (AVLNode**, int);
 void printTree (AVLNode*);
 //======================== DEFINICONES DE LAS FUNCIONES ===================================//
+int bf (AVLNode* node) {
+    return nodeHeight (node->m_right) - nodeHeight (node->m_left);	
+}
 
-void rightRotate (AVLNode* node) {
+AVLNode* rightRotate (AVLNode* node) {
     assert (node);
     assert (node->m_left); 
 
@@ -46,9 +50,13 @@ void rightRotate (AVLNode* node) {
     
     node->m_left = back;
     if (back) back->m_parent = node;
+    root->m_height = 1 + MAX (nodeHeight (root->m_right), nodeHeight (root->m_left));
+    root->m_right->m_height = 1 + MAX (nodeHeight (root->m_right), nodeHeight (root->m_left));
+
+    return root;
 }
 
-void leftRotate (AVLNode* node) {
+AVLNode* leftRotate (AVLNode* node) {
     assert (node);
     assert (node->m_right); 
 
@@ -66,6 +74,11 @@ void leftRotate (AVLNode* node) {
 
     node->m_right = back;
     if (back) back->m_parent = node;
+    
+    root->m_height = 1 + MAX (nodeHeight (root->m_right), nodeHeight (root->m_left));
+    root->m_left->m_height = 1 + MAX (nodeHeight (root->m_right), nodeHeight (root->m_left));
+
+    return root;
 }
 
 void printTree (AVLNode* node) {printTreeRecursive (node, 1);}

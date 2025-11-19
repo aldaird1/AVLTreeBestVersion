@@ -26,8 +26,11 @@ int main () {
 	printf ("Aca esta el tree:\n");
 	    printTree (root);	
     }
-    leftRotate (root);
-    printf ("Rotación a la izquierda del arbol\n");
+    printf ("Rotación a la izquierda del arbol del  izquierdo\n");
+    root->m_left = leftRotate (root->m_left);
+    printTree (root);
+    printf ("Rotación a la derecha del arbol del  izquierdo\n");
+    root->m_right = rightRotate (root->m_right);
     printTree (root);
     return 0; 
 }
